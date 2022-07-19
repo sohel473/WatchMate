@@ -1,0 +1,17 @@
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+media
+# Environments 
+.env 
+.venv
+.menv
+env/ 
+venv/ 
+menv/ 
+ENV/ 
+env.bak/ 
+venv.bak/
