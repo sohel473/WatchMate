@@ -2,30 +2,37 @@ from dataclasses import field, fields
 from pyexpat import model
 from wsgiref.validate import validator
 from rest_framework import serializers
-from app_watchlist.models import Movie
+from app_watchlist.models import WatchList, StreamPlatform
 
 
-class MovieSerializers(serializers.ModelSerializer):
+class StreamPlatformSerializers(serializers.ModelSerializer):
     class Meta:
-        model = Movie
+        model = StreamPlatform
         fields = "__all__"
         # exclude = ['active']
 
-    name_len = serializers.SerializerMethodField()
 
-    def get_name_len(self, obj):
-        return len(obj.name)
+class WatchListSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = WatchList
+        fields = "__all__"
+        # exclude = ['active']
 
-    def validate_name(self, value):
-        if len(value) < 2:
-            raise serializers.ValidationError("Name is too short")
-        return value
+    # name_len = serializers.SerializerMethodField()
 
-    def validate(self, data):
-        if data['name'] == data['description']:
-            raise serializers.ValidationError(
-                "Movies name and description are identical")
-        return data
+    # def get_name_len(self, obj):
+    #     return len(obj.name)
+
+    # def validate_name(self, value):
+    #     if len(value) < 2:
+    #         raise serializers.ValidationError("Name is too short")
+    #     return value
+
+    # def validate(self, data):
+    #     if data['name'] == data['description']:
+    #         raise serializers.ValidationError(
+    #             "Movies name and description are identical")
+    #     return data
 
 # def name_length(value):
 #     if len(value) < 2:
