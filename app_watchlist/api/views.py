@@ -1,4 +1,3 @@
-from platform import platform
 from app_watchlist.api.serializers import WatchListSerializers, StreamPlatformSerializers
 from app_watchlist.models import WatchList, StreamPlatform
 from rest_framework.response import Response
