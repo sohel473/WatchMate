@@ -23,14 +23,17 @@ class StreamPlatformAV(APIView):
 
 
 class StreamPlatformDetailsAV(APIView):
-    def get_object(self, pk):
+    # def get_object(self, pk):
+    #     try:
+    #         return StreamPlatform.objects.get(pk=pk)
+    #     except StreamPlatform.DoesNotExist:
+    #         return Response({"Error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, pk): 
         try:
-            return StreamPlatform.objects.get(pk=pk)
+            platform = StreamPlatform.objects.get(pk=pk)
         except StreamPlatform.DoesNotExist:
             return Response({"Error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
-
-    def get(self, request, pk):
-        platform = self.get_object(pk)
         serializers = StreamPlatformSerializers(platform)
         return Response(serializers.data)
 
@@ -66,14 +69,17 @@ class WatchListAV(APIView):
 
 
 class WatchListDetailsAV(APIView):
-    def get_object(self, pk):
-        try:
-            return WatchList.objects.get(pk=pk)
-        except WatchList.DoesNotExist:
-            return Response({"Error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
+    # def get_object(self, pk):
+    #     try:
+    #         return WatchList.objects.get(pk=pk)
+    #     except WatchList.DoesNotExist:
+    #         return Response({"Error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def get(self, request, pk):
-        movie = self.get_object(pk)
+        try:
+            movie = WatchList.objects.get(pk=pk)
+        except WatchList.DoesNotExist:
+            return Response({"Error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
         serializers = WatchListSerializers(movie)
         return Response(serializers.data)
 
