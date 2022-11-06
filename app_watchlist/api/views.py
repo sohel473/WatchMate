@@ -65,41 +65,45 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 #         return self.destroy(request, *args, **kwargs)
 
 
-class StreanViewSet(viewsets.ViewSet):
-    """
-    A simple ViewSet for listing or retrieving users.
-    """
+class StreanViewSet(viewsets.ModelViewSet):
+    serializer_class = StreamPlatformSerializers
+    queryset = StreamPlatform.objects.all()
 
-    def list(self, request):
-        queryset = StreamPlatform.objects.all()
-        serializer = StreamPlatformSerializers(queryset, many=True)
-        return Response(serializer.data)
+# class StreanViewSet(viewsets.ViewSet):
+#     """
+#     A simple ViewSet for listing or retrieving users.
+#     """
 
-    def retrieve(self, request, pk=None):
-        queryset = StreamPlatform.objects.all()
-        stream = get_object_or_404(queryset, pk=pk)
-        serializer = StreamPlatformSerializers(stream)
-        return Response(serializer.data)
+#     def list(self, request):
+#         queryset = StreamPlatform.objects.all()
+#         serializer = StreamPlatformSerializers(queryset, many=True)
+#         return Response(serializer.data)
 
-    def create(self, request):
-        serializers = StreamPlatformSerializers(data=request.data)
-        if serializers.is_valid():
-            serializers.save()
-            return Response(serializers.data)
-        else:
-            return Response(serializers.errors)
+#     def retrieve(self, request, pk=None):
+#         queryset = StreamPlatform.objects.all()
+#         stream = get_object_or_404(queryset, pk=pk)
+#         serializer = StreamPlatformSerializers(stream)
+#         return Response(serializer.data)
 
-    def update(self, request, pk=None):
-        platform = StreamPlatform.objects.get(pk=pk)
-        serializers = StreamPlatformSerializers(platform, data=request.data)
-        if serializers.is_valid():
-            serializers.save()
-            return Response(serializers.data)
+#     def create(self, request):
+#         serializers = StreamPlatformSerializers(data=request.data)
+#         if serializers.is_valid():
+#             serializers.save()
+#             return Response(serializers.data)
+#         else:
+#             return Response(serializers.errors)
 
-    def destroy(self, request, pk=None):
-        platform = StreamPlatform.objects.get(pk=pk)
-        platform.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#     def update(self, request, pk=None):
+#         platform = StreamPlatform.objects.get(pk=pk)
+#         serializers = StreamPlatformSerializers(platform, data=request.data)
+#         if serializers.is_valid():
+#             serializers.save()
+#             return Response(serializers.data)
+
+#     def destroy(self, request, pk=None):
+#         platform = StreamPlatform.objects.get(pk=pk)
+#         platform.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
 
 # class StreamPlatformAV(APIView):
 
