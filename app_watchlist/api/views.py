@@ -81,6 +81,26 @@ class StreanViewSet(viewsets.ViewSet):
         serializer = StreamPlatformSerializers(stream)
         return Response(serializer.data)
 
+    def create(self, request):
+        serializers = StreamPlatformSerializers(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data)
+        else:
+            return Response(serializers.errors)
+
+    def update(self, request, pk=None):
+        platform = StreamPlatform.objects.get(pk=pk)
+        serializers = StreamPlatformSerializers(platform, data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data)
+
+    def destroy(self, request, pk=None):
+        platform = StreamPlatform.objects.get(pk=pk)
+        platform.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 # class StreamPlatformAV(APIView):
 
 #     def get(self, request):
