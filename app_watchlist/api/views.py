@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status, mixins, generics, viewsets
 from django.shortcuts import get_object_or_404
+from rest_framework.exceptions import ValidationError
 
 
 class ReviewList(generics.ListCreateAPIView):
@@ -17,10 +18,16 @@ class ReviewList(generics.ListCreateAPIView):
         reviews = Review.objects.filter(watchlist=watch_pk)
         return reviews
 
-    # def perform_create(self, serializer):
-    #     watch_pk = self.kwargs['pk']
-    #     watchlist = WatchList.objects.get(pk=watch_pk)
-    #     serializer.save(watchlist=watchlist)
+    def perform_create(self, serializer):
+        watch_list = WatchList.objects.get(pk=self.kwargs['pk'])
+        user = self.request.user
+        review_exist = Review.objects.filter(
+            watchlist=watch_list, review_user=user)
+
+        if review_exist:
+            raise ValidationError("You already reviewed this!")
+
+        serializer.save(watchlist=watch_list, review_user=user)
 
 
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -65,11 +72,11 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 #         return self.destroy(request, *args, **kwargs)
 
 
-class StreanViewSet(viewsets.ModelViewSet):
+class StreamViewSet(viewsets.ModelViewSet):
     serializer_class = StreamPlatformSerializers
     queryset = StreamPlatform.objects.all()
 
-# class StreanViewSet(viewsets.ViewSet):
+# class StreamViewSet(viewsets.ViewSet):
 #     """
 #     A simple ViewSet for listing or retrieving users.
 #     """
