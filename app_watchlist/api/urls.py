@@ -5,7 +5,7 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 
-router.register(r'watch/stream', StreamViewSet, basename='stream')
+router.register(r'watch/streams', StreamViewSet, basename='streams')
 
 urlpatterns = [
     path('watch/list/', WatchListAV.as_view(), name='movie-list'),
@@ -22,7 +22,7 @@ urlpatterns = [
     #          name='review-detail'),
     #     path('review/<int:pk>/', ReviewDetail.as_view(),
     #          name='review-detail'),
-    path('watch/<int:pk>/review/', ReviewList.as_view(), name='review-detail'),
-    path('watch/<int:pk1>/review/<int:pk>/',
+    path('watch/<int:pk>/reviews/', ReviewList.as_view(), name='reviews'),
+    path('watch/<int:pk1>/reviews/<int:pk>/',
          ReviewDetail.as_view(), name='review-detail'),
 ]

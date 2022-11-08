@@ -30,6 +30,22 @@ class ReviewList(generics.ListCreateAPIView):
         if review_exist:
             raise ValidationError("You already reviewed this!")
 
+        if watch_list.number_rating == 0:
+            # print("nnum of rating = 0")
+            watch_list.sum_rating = serializer.validated_data['rating']
+            watch_list.avg_rating = serializer.validated_data['rating']
+            watch_list.number_rating = 1
+        else:
+            # print("nnum of rating more than 0")
+            watch_list.sum_rating += serializer.validated_data['rating']
+            watch_list.number_rating += 1
+            watch_list.avg_rating = watch_list.sum_rating / watch_list.number_rating
+            # print(watch_list.sum_rating)
+            # print(watch_list.number_rating)
+            # print(watch_list.avg_rating)
+
+        watch_list.save()
+
         serializer.save(watchlist=watch_list, review_user=user)
 
 
