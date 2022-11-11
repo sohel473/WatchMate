@@ -32,9 +32,9 @@ def registration_view(request):
         return Response(data, status=status.HTTP_201_CREATED)
 
 
-# @api_view(['POST', ])
-# def logout_view(request):
+@api_view(['POST', ])
+def logout_view(request):
 
-#     if request.method == 'POST':
-#         request.user.auth_token.delete()
-#         return Response(status=status.HTTP_200_OK)
+    if request.method == 'POST':
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
