@@ -13,7 +13,7 @@ from app_watchlist.api.permissions import AdminOrReadOnly, ReviewUserOrReadOnly
 class ReviewList(generics.ListCreateAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         # print(self.kwargs)
