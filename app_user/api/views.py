@@ -3,7 +3,8 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status
 from django.contrib.auth.models import User
-
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from app_user.api.serializers import RegistrationSerializer
 from app_user import models
 
@@ -33,8 +34,8 @@ def registration_view(request):
 
 
 @api_view(['POST', ])
+@permission_classes([IsAuthenticated])
 def logout_view(request):
-
     if request.method == 'POST':
         request.user.auth_token.delete()
         return Response(status=status.HTTP_200_OK)

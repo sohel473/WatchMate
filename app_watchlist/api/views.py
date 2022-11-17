@@ -7,7 +7,7 @@ from rest_framework import status, mixins, generics, viewsets
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from app_watchlist.api.permissions import AdminOrReadOnly, ReviewUserOrReadOnly
+from app_watchlist.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly
 
 
 class ReviewList(generics.ListCreateAPIView):
@@ -52,7 +52,7 @@ class ReviewList(generics.ListCreateAPIView):
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [ReviewUserOrReadOnly]
+    permission_classes = [IsReviewUserOrReadOnly]
 
     # def get_queryset(self):
     #     print(self.kwargs)
@@ -95,6 +95,8 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 class StreamViewSet(viewsets.ModelViewSet):
     serializer_class = StreamPlatformSerializers
     queryset = StreamPlatform.objects.all()
+    permission_classes = [IsAdminOrReadOnly]
+
 
 # class StreamViewSet(viewsets.ViewSet):
 #     """
@@ -180,6 +182,7 @@ class StreamViewSet(viewsets.ModelViewSet):
 
 
 class WatchListAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request):
         movies = WatchList.objects.all()
@@ -201,6 +204,8 @@ class WatchListDetailsAV(APIView):
     #         return WatchList.objects.get(pk=pk)
     #     except WatchList.DoesNotExist:
     #         return Response({"Error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    permission_classes = [IsAdminOrReadOnly]
 
     def get(self, request, pk):
         try:
