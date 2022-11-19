@@ -110,14 +110,9 @@ REST_FRAMEWORK = {
     # ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ]
 }
-
-# SIMPLE_JWT = {
-#     'ROTATE_REFRESH_TOKENS': True,
-# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

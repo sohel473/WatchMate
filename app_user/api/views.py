@@ -6,8 +6,7 @@ from django.contrib.auth.models import User
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from app_user.api.serializers import RegistrationSerializer
-# from app_user import models
-from rest_framework_simplejwt.tokens import RefreshToken
+from app_user import models
 
 
 @api_view(['POST', ])
@@ -23,18 +22,10 @@ def registration_view(request):
             data['account'] = account.username
             data['email'] = account.email
 
-            # # Token authentication
-            # # for user in User.objects.all():
-            # #   Token.objects.get_or_create(user=acccont)
-            # token = Token.objects.get(user=account)
-            # data['token'] = token.key
-
-            # JWT Authentication
-            refresh = RefreshToken.for_user(account)
-            data['token'] = {
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-            }
+            # for user in User.objects.all():
+            #   Token.objects.get_or_create(user=user)
+            token = Token.objects.get(user=account)
+            data['token'] = token.key
 
         else:
             data = serializer.errors
