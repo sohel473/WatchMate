@@ -9,13 +9,15 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from app_watchlist.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
+from app_watchlist.api.throttling import WatchList_UserRateThrottle, ReviewList_UserRateThrottle, WatchList_AnonRateThrottle, ReviewList_AnonRateThrottle
 
 
 class ReviewList(generics.ListCreateAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsAdminOrReadOnly]
-    throttle_classes = [UserRateThrottle, AnonRateThrottle]
+    throttle_classes = [ReviewList_UserRateThrottle,
+                        WatchList_AnonRateThrottle]
 
     def get_queryset(self):
         # print(self.kwargs)
@@ -185,7 +187,8 @@ class StreamViewSet(viewsets.ModelViewSet):
 
 class WatchListAV(APIView):
     permission_classes = [IsAdminOrReadOnly]
-    throttle_classes = [UserRateThrottle, AnonRateThrottle]
+    throttle_classes = [WatchList_UserRateThrottle,
+                        ReviewList_AnonRateThrottle]
 
     def get(self, request):
         movies = WatchList.objects.all()
