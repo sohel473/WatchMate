@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from app_watchlist.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly
-from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle, ScopedRateThrottle
 from app_watchlist.api.throttling import WatchList_UserRateThrottle, ReviewList_UserRateThrottle, WatchList_AnonRateThrottle, ReviewList_AnonRateThrottle
 
 
@@ -212,6 +212,8 @@ class WatchListDetailsAV(APIView):
     #         return Response({"Error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
     permission_classes = [IsAuthenticated]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'watchlist-details'
 
     def get(self, request, pk):
         try:

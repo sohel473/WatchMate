@@ -123,6 +123,7 @@ REST_FRAMEWORK = {
         'review-list-anon': '3/day',
         'watch-list-user': '5/day',
         'review-list-user': '5/day',
+        'watchlist-details': '2/day',
     },
 }
 
