@@ -8,12 +8,14 @@ from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from app_watchlist.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 
 
 class ReviewList(generics.ListCreateAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrReadOnly]
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]
 
     def get_queryset(self):
         # print(self.kwargs)
@@ -52,7 +54,7 @@ class ReviewList(generics.ListCreateAPIView):
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsReviewUserOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     # def get_queryset(self):
     #     print(self.kwargs)
@@ -183,6 +185,7 @@ class StreamViewSet(viewsets.ModelViewSet):
 
 class WatchListAV(APIView):
     permission_classes = [IsAdminOrReadOnly]
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]
 
     def get(self, request):
         movies = WatchList.objects.all()
@@ -205,7 +208,7 @@ class WatchListDetailsAV(APIView):
     #     except WatchList.DoesNotExist:
     #         return Response({"Error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
         try:
