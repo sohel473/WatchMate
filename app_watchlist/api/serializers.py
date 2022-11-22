@@ -11,6 +11,23 @@ class ReviewSerializer(serializers.ModelSerializer):
         # fields = "__all__"
 
 
+class ReviewUserSerializer(serializers.ModelSerializer):
+    # shows user name and watchlist name with read_only
+    review_user = serializers.StringRelatedField()
+    watchlist = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Review
+        fields = '__all__'
+
+    # shows user name and watchlist name with write and update operations as well
+    # def to_representation(self, instance):
+    #     rep = super(ReviewUserSerializer, self).to_representation(instance)
+    #     rep['review_user'] = instance.review_user.username
+    #     rep['watchlist'] = instance.watchlist.title
+    #     return rep
+
+
 class WatchListSerializers(serializers.ModelSerializer):
 
     # platform = serializers.ReadOnlyField(source='platform.name')

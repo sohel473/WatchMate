@@ -1,4 +1,4 @@
-from app_watchlist.api.serializers import WatchListSerializers, StreamPlatformSerializers, ReviewSerializer
+from app_watchlist.api.serializers import ReviewUserSerializer, WatchListSerializers, StreamPlatformSerializers, ReviewSerializer
 from app_watchlist.models import WatchList, StreamPlatform, Review
 from rest_framework.response import Response
 # from rest_framework.decorators import api_view
@@ -12,17 +12,33 @@ from rest_framework.throttling import UserRateThrottle, AnonRateThrottle, Scoped
 from app_watchlist.api.throttling import WatchList_UserRateThrottle, ReviewList_UserRateThrottle, WatchList_AnonRateThrottle, ReviewList_AnonRateThrottle
 
 
+class UserReview(generics.ListAPIView):
+    serializer_class = ReviewUserSerializer
+
+    def get_queryset(self):
+        reviews = Review.objects.all()
+        user = self.request.query_params.get('user')
+        if user:
+            reviews = reviews.filter(user=user)
+
+        return reviews
+
+
 class ReviewList(generics.ListCreateAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAdminOrReadOnly]
-    throttle_classes = [ReviewList_UserRateThrottle,
-                        WatchList_AnonRateThrottle]
+    permission_classes = [IsAuthenticated]
+    # throttle_classes = [ReviewList_UserRateThrottle,
+    #                     WatchList_AnonRateThrottle]
 
     def get_queryset(self):
         # print(self.kwargs)
         watch_pk = self.kwargs['pk']
         reviews = Review.objects.filter(watchlist=watch_pk)
+        active = self.request.query_params.get('active')
+        print(active)
+        if active is not None:
+            reviews = Review.objects.filter(watchlist=watch_pk, active=active)
         return reviews
 
     def perform_create(self, serializer):
@@ -56,7 +72,7 @@ class ReviewList(generics.ListCreateAPIView):
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsReviewUserOrReadOnly]
 
     # def get_queryset(self):
     #     print(self.kwargs)
@@ -187,8 +203,8 @@ class StreamViewSet(viewsets.ModelViewSet):
 
 class WatchListAV(APIView):
     permission_classes = [IsAdminOrReadOnly]
-    throttle_classes = [WatchList_UserRateThrottle,
-                        ReviewList_AnonRateThrottle]
+    # throttle_classes = [WatchList_UserRateThrottle,
+    #                     ReviewList_AnonRateThrottle]
 
     def get(self, request):
         movies = WatchList.objects.all()
@@ -212,8 +228,8 @@ class WatchListDetailsAV(APIView):
     #         return Response({"Error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
 
     permission_classes = [IsAuthenticated]
-    throttle_classes = [ScopedRateThrottle]
-    throttle_scope = 'watchlist-details'
+    # throttle_classes = [ScopedRateThrottle]
+    # throttle_scope = 'watchlist-details'
 
     def get(self, request, pk):
         try:
