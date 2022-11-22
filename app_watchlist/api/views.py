@@ -17,9 +17,15 @@ class UserReview(generics.ListAPIView):
 
     def get_queryset(self):
         reviews = Review.objects.all()
+        # filter by user id
+        # user_id = self.request.query_params.get('user')
+        # or c
         user = self.request.query_params.get('user')
-        if user:
-            reviews = reviews.filter(user=user)
+        print(user)
+        # if user_id is not None:
+        #     reviews = reviews.filter(review_user=user_id)
+        if user is not None:
+            reviews = reviews.filter(review_user__username=user)
 
         return reviews
 
@@ -35,10 +41,11 @@ class ReviewList(generics.ListCreateAPIView):
         # print(self.kwargs)
         watch_pk = self.kwargs['pk']
         reviews = Review.objects.filter(watchlist=watch_pk)
-        active = self.request.query_params.get('active')
-        print(active)
-        if active is not None:
-            reviews = Review.objects.filter(watchlist=watch_pk, active=active)
+        isActive = self.request.query_params.get('isActive')
+        print(isActive)
+        if isActive is not None:
+            reviews = Review.objects.filter(
+                watchlist=watch_pk, active=isActive)
         return reviews
 
     def perform_create(self, serializer):
