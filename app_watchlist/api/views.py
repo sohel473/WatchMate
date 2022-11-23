@@ -1,4 +1,4 @@
-from app_watchlist.api.serializers import ReviewUserSerializer, WatchListSerializers, StreamPlatformSerializers, ReviewSerializer
+from app_watchlist.api.serializers import AllReviewSerializer, WatchListSerializers, StreamPlatformSerializers, ReviewSerializer
 from app_watchlist.models import WatchList, StreamPlatform, Review
 from rest_framework.response import Response
 # from rest_framework.decorators import api_view
@@ -10,24 +10,28 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from app_watchlist.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle, ScopedRateThrottle
 from app_watchlist.api.throttling import WatchList_UserRateThrottle, ReviewList_UserRateThrottle, WatchList_AnonRateThrottle, ReviewList_AnonRateThrottle
+from django_filters.rest_framework import DjangoFilterBackend
 
 
-class UserReview(generics.ListAPIView):
-    serializer_class = ReviewUserSerializer
+class AllReview(generics.ListAPIView):
+    queryset = Review.objects.all()
+    serializer_class = AllReviewSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['review_user', 'active']
 
-    def get_queryset(self):
-        reviews = Review.objects.all()
-        # filter by user id
-        # user_id = self.request.query_params.get('user')
-        # or c
-        user = self.request.query_params.get('user')
-        print(user)
-        # if user_id is not None:
-        #     reviews = reviews.filter(review_user=user_id)
-        if user is not None:
-            reviews = reviews.filter(review_user__username=user)
+    # def get_queryset(self):
+    #     reviews = Review.objects.all()
+    #     # filter by user id
+    #     # user_id = self.request.query_params.get('user')
+    #     # or c
+    #     user = self.request.query_params.get('user')
+    #     print(user)
+    #     # if user_id is not None:
+    #     #     reviews = reviews.filter(review_user=user_id)
+    #     if user is not None:
+    #         reviews = reviews.filter(review_user__username=user)
 
-        return reviews
+    #     return reviews
 
 
 class ReviewList(generics.ListCreateAPIView):

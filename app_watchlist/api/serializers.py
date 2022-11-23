@@ -11,7 +11,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         # fields = "__all__"
 
 
-class ReviewUserSerializer(serializers.ModelSerializer):
+class AllReviewSerializer(serializers.ModelSerializer):
     # shows user name and watchlist name with read_only
     review_user = serializers.StringRelatedField()
     watchlist = serializers.StringRelatedField(read_only=True)
