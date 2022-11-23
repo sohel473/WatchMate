@@ -3,7 +3,7 @@ from app_watchlist.models import WatchList, StreamPlatform, Review
 from rest_framework.response import Response
 # from rest_framework.decorators import api_view
 from rest_framework.views import APIView
-from rest_framework import status, mixins, generics, viewsets
+from rest_framework import status, mixins, generics, viewsets, filters
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
@@ -16,8 +16,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 class AllReview(generics.ListAPIView):
     queryset = Review.objects.all()
     serializer_class = AllReviewSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend,
+                       filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['review_user', 'active']
+    search_fields = ['watchlist__title', 'description']
+    ordering_fields = ['watchlist__title', 'rating']
 
     # def get_queryset(self):
     #     reviews = Review.objects.all()
