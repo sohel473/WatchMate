@@ -13,6 +13,17 @@ from app_watchlist.api.throttling import WatchList_UserRateThrottle, ReviewList_
 from django_filters.rest_framework import DjangoFilterBackend
 
 
+class WatchListGV(generics.ListAPIView):
+    queryset = WatchList.objects.all()
+    serializer_class = WatchListSerializers
+    filter_backends = [DjangoFilterBackend,
+                       filters.SearchFilter, filters.OrderingFilter]
+
+    filterset_fields = ['platform__name', 'active']
+    search_fields = ['title', 'storyline']
+    ordering_fields = ['avg_rating', 'created']
+
+
 class AllReview(generics.ListAPIView):
     queryset = Review.objects.all()
     serializer_class = AllReviewSerializer

@@ -30,8 +30,11 @@ class AllReviewSerializer(serializers.ModelSerializer):
 
 class WatchListSerializers(serializers.ModelSerializer):
 
+    # platform = serializers.StringRelatedField()
     # platform = serializers.ReadOnlyField(source='platform.name')
-    reviews = ReviewSerializer(many=True, read_only=True)
+    platform = serializers.CharField(source='platform.name')
+    # reviews = ReviewSerializer(many=True, read_only=True)
+    reviews = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = WatchList
