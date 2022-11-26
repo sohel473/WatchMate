@@ -127,6 +127,8 @@ REST_FRAMEWORK = {
         'review-list-user': '5/day',
         'watchlist-details': '2/day',
     },
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'PAGE_SIZE': 5,
 }
 
 # Internationalization
