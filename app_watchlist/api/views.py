@@ -1,4 +1,4 @@
-from app_watchlist.api.pagination import WatchListLOPagination, WatchListPagination
+from app_watchlist.api.pagination import WatchListCPagination, WatchListLOPagination, WatchListPagination
 from app_watchlist.api.serializers import AllReviewSerializer, WatchListSerializers, StreamPlatformSerializers, ReviewSerializer
 from app_watchlist.models import WatchList, StreamPlatform, Review
 from rest_framework.response import Response
@@ -17,13 +17,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 class WatchListGV(generics.ListAPIView):
     queryset = WatchList.objects.all()
     serializer_class = WatchListSerializers
-    pagination_class = WatchListLOPagination
+    pagination_class = WatchListCPagination
     filter_backends = [DjangoFilterBackend,
-                       filters.SearchFilter, filters.OrderingFilter]
+                       filters.SearchFilter]
 
     filterset_fields = ['platform__name', 'active']
     search_fields = ['title', 'storyline']
-    ordering_fields = ['avg_rating', 'created']
+    # ordering_fields = ['avg_rating', 'created']
 
 
 class AllReview(generics.ListAPIView):
