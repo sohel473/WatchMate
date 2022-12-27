@@ -84,16 +84,18 @@ class ReviewTest(APITestCase):
 
   def test_review_create(self):
       data = {
-          "review_user": self.user,
+          "review_user": self.user.id,
           "rating": 5,
           "description": "Great Movie!",
-          "watchlist": self.watchlist,
+          "watchlist": self.watchlist.id,
           "active": True
       }
 
       response = self.client.post(reverse('reviews', args=(self.watchlist.id,)), data)
       self.assertEqual(response.status_code, status.HTTP_201_CREATED)
       self.assertEqual(models.Review.objects.count(), 2)
+      # self.assertEqual(models.Review.objects.get().rating, 5)
+
 
       # Test for duplicate review by watchlist
       response = self.client.post(reverse('reviews', args=(self.watchlist.id,)), data)
